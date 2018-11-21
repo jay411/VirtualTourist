@@ -52,6 +52,12 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
+        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
+            guard error == nil else {
+                print("more error")
+                return
+            }
+        }
         mapView.addAnnotation(tappedPointAnnotation)
     }
 }

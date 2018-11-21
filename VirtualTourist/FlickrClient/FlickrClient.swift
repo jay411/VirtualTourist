@@ -11,6 +11,12 @@ import SwiftyJSON
 import Alamofire
 
 class FlickrClient {
+    class func sharedInstance() -> FlickrClient {
+        struct Singleton {
+            static var sharedInstance = FlickrClient()
+        }
+        return Singleton.sharedInstance
+    }
 
     private func flickrURLFromParameters(_ parameters: [String:AnyObject]) -> URL {
 
@@ -30,14 +36,27 @@ class FlickrClient {
     // One request to get photos dictionary
     func getImageUrls(_ parameters: [String:AnyObject], _ completionHandlerForGetImages: @escaping (_ success: Bool,_ error: Error?)  -> Void) {
         let url = flickrURLFromParameters(parameters)
-        Alamofire.request(url).responseJSON { (response) in
+        Alamofire.request(url).responseData(completionHandler: {  (response) in
             switch response.result {
             case .success:
                 (print("success"))
+                (print(response.result.description))
             case .failure (let error):
+                print("error")
                 (print(error.localizedDescription))
             }
-        }
+        })
+
+//        Alamofire.request(url).responseJSON { (response) in
+//            switch response.result {
+//            case .success:
+//                (print("success"))
+//                (print(response.result.description))
+//            case .failure (let error):
+//                print("error")
+//                (print(error.localizedDescription))
+//            }
+//        }
     }
     // One request to get images
 }
