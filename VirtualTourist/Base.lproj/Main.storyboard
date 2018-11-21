@@ -41,20 +41,79 @@
             </objects>
             <point key="canvasLocation" x="964" y="31.934032983508249"/>
         </scene>
-        <!--View Controller-->
+        <!--Photo View Controller-->
         <scene sceneID="AZV-TS-pqg">
             <objects>
-                <viewController id="LLv-7a-fnn" sceneMemberID="viewController">
+                <viewController id="LLv-7a-fnn" customClass="PhotoViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bb6-zE-U6U">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbZ-L4-78q">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <connections>
+                                    <segue destination="7eT-DL-reO" kind="embed" id="q5T-s3-VMh"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rEH-kV-wmW">
+                                <rect key="frame" x="0.0" y="408" width="375" height="259"/>
+                                <connections>
+                                    <segue destination="vqK-lI-imc" kind="embed" id="Fdd-m8-Vod"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="YFs-Bg-tal" firstAttribute="bottom" secondItem="rEH-kV-wmW" secondAttribute="bottom" id="1IQ-V4-qFi"/>
+                            <constraint firstItem="bbZ-L4-78q" firstAttribute="leading" secondItem="YFs-Bg-tal" secondAttribute="leading" id="6aC-dN-d3o"/>
+                            <constraint firstItem="rEH-kV-wmW" firstAttribute="top" secondItem="bbZ-L4-78q" secondAttribute="bottom" constant="-259" id="7EA-mD-jvW"/>
+                            <constraint firstItem="rEH-kV-wmW" firstAttribute="leading" secondItem="YFs-Bg-tal" secondAttribute="leading" id="FM1-c2-wPw"/>
+                            <constraint firstItem="YFs-Bg-tal" firstAttribute="trailing" secondItem="rEH-kV-wmW" secondAttribute="trailing" id="H7H-3D-Yn3"/>
+                            <constraint firstItem="rEH-kV-wmW" firstAttribute="centerX" secondItem="YFs-Bg-tal" secondAttribute="centerX" id="VaW-or-iow"/>
+                            <constraint firstItem="YFs-Bg-tal" firstAttribute="trailing" secondItem="bbZ-L4-78q" secondAttribute="trailing" id="VjQ-4D-kBZ"/>
+                            <constraint firstItem="bbZ-L4-78q" firstAttribute="bottom" secondItem="rEH-kV-wmW" secondAttribute="bottom" id="Vs3-0R-msG"/>
+                            <constraint firstItem="bbZ-L4-78q" firstAttribute="top" secondItem="YFs-Bg-tal" secondAttribute="top" id="eWS-sp-Nm1"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="YFs-Bg-tal"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cu5-6P-MU2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2524" y="44"/>
+            <point key="canvasLocation" x="2523.5" y="43.5"/>
+        </scene>
+        <!--Photo Cells View Controller-->
+        <scene sceneID="QqL-bH-sRc">
+            <objects>
+                <collectionViewController id="vqK-lI-imc" customClass="PhotoCellsViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="23v-vd-8hS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="259"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="94g-rN-eGD">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="photoCell" id="hqf-Bm-Efo">
+                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="vqK-lI-imc" id="mkh-zU-Xho"/>
+                            <outlet property="delegate" destination="vqK-lI-imc" id="pB9-ie-Uf8"/>
+                        </connections>
+                    </collectionView>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WYS-n7-jkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3394" y="297"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IAF-kJ-fSw">
@@ -73,6 +132,30 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FwZ-Zh-vVQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="21.600000000000001" y="-665.21739130434787"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="HqR-4d-GTJ">
+            <objects>
+                <viewController id="7eT-DL-reO" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="sHZ-fu-WbU">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hi" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jjp-bo-gFT">
+                                <rect key="frame" x="178" y="131" width="17" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="GXz-2t-P0Z"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LOX-hK-5bI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2542.5" y="-732.5"/>
         </scene>
     </scenes>
 </document>
