@@ -12,7 +12,7 @@ extension FlickrClient {
     struct Constants {
         static let ApiScheme = "https"
         static let ApiHost = "api.flickr.com"
-        static let ApiPath = "/service/rest"
+        static let ApiPath = "/services/rest"
 
         static let SearchBBoxHalfWidth = 1.0
         static let SearchBBoxHalfHeight = 1.0
@@ -31,6 +31,8 @@ extension FlickrClient {
         static let Text = "text"
         static let BoundingBox = "bbox"
         static let Page = "page"
+        static let latitude = "lat"
+        static let longitude = "lon"
     }
 
     // MARK: Flickr Parameter Values

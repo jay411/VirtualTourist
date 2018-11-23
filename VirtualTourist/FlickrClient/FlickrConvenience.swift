@@ -13,13 +13,13 @@ extension FlickrClient {
 
     func getImagesForPoint(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees, _ completionHandlerForGet: @escaping(_ success: Bool, _ error: Error?) -> Void) {
         let methodParameters = [
-            FlickrClient.FlickrParameterKeys.Method: FlickrClient.FlickrParameterValues.SearchMethod,
-            FlickrClient.FlickrParameterKeys.APIKey: FlickrClient.FlickrParameterValues.APIKey,
-            FlickrClient.FlickrParameterKeys.BoundingBox: bboxString(latitude,longitude),
-            FlickrClient.FlickrParameterKeys.SafeSearch: FlickrClient.FlickrParameterValues.UseSafeSearch,
-            FlickrClient.FlickrParameterKeys.Extras: FlickrClient.FlickrParameterValues.MediumURL,
-            FlickrClient.FlickrParameterKeys.Format: FlickrClient.FlickrParameterValues.ResponseFormat,
-            FlickrClient.FlickrParameterKeys.NoJSONCallback: FlickrClient.FlickrParameterValues.DisableJSONCallback
+            FlickrParameterKeys.Method: FlickrParameterValues.SearchMethod,
+            FlickrParameterKeys.APIKey: FlickrParameterValues.APIKey,
+            FlickrParameterKeys.BoundingBox: bboxString(latitude, longitude),
+            FlickrParameterKeys.SafeSearch: FlickrParameterValues.UseSafeSearch,
+            FlickrParameterKeys.Extras: FlickrParameterValues.MediumURL,
+            FlickrParameterKeys.Format: FlickrParameterValues.ResponseFormat,
+            FlickrParameterKeys.NoJSONCallback: FlickrClient.FlickrParameterValues.DisableJSONCallback
         ]
         self.getImageUrls(methodParameters as [String:AnyObject]) { success, error in
             guard error == nil else {

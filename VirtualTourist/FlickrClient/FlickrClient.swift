@@ -24,8 +24,8 @@ class FlickrClient {
         components.scheme = Constants.ApiScheme
         components.host = Constants.ApiHost
         components.path = Constants.ApiPath
+        
         components.queryItems = [URLQueryItem]()
-
         for (key, value) in parameters {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
@@ -35,28 +35,20 @@ class FlickrClient {
     }
     // One request to get photos dictionary
     func getImageUrls(_ parameters: [String:AnyObject], _ completionHandlerForGetImages: @escaping (_ success: Bool,_ error: Error?)  -> Void) {
-        let url = flickrURLFromParameters(parameters)
-        Alamofire.request(url).responseData(completionHandler: {  (response) in
-            switch response.result {
-            case .success:
-                (print("success"))
-                (print(response.result.description))
-            case .failure (let error):
-                print("error")
-                (print(error.localizedDescription))
-            }
-        })
 
-//        Alamofire.request(url).responseJSON { (response) in
-//            switch response.result {
-//            case .success:
-//                (print("success"))
-//                (print(response.result.description))
-//            case .failure (let error):
-//                print("error")
-//                (print(error.localizedDescription))
-//            }
-//        }
+        let requestURL = URLRequest(url: flickrURLFromParameters(parameters))
+        print(requestURL)
+        Alamofire.request(requestURL).validate().responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json["photos"]["photo"][0][FlickrResponseKeys.MediumURL])
+
+            case .failure(let error):
+                print("error",error.localizedDescription)
+            }
+        }
+
     }
     // One request to get images
 }
