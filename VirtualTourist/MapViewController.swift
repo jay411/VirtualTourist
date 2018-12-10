@@ -9,11 +9,25 @@
 import UIKit
 import MapKit
 import CoreLocation
+import CoreData
 
 class MapViewController: UIViewController,MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     var initialMapData: [String:CLLocationDegrees]?
+
+    var dataController:DataController!
+    var fetchedResultsController:NSFetchedResultsController<Pin>!
+    var mapPins: [Pin]?
+    var pinAnnotations: [MKPointAnnotation]?
+
+    private func fetchPins() {
+        let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
+            if let result = try? dataController.viewContext.fetch(fetchRequest) {
+                print("pins found",result.count)
+                mapPins = result
+            }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +35,7 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         tap.delegate = self as? UIGestureRecognizerDelegate
         mapView.addGestureRecognizer(tap)
+        self.fetchPins()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -38,6 +53,8 @@ class MapViewController: UIViewController,MKMapViewDelegate {
             let newRegion = MKCoordinateRegion(center: newCenter, span: span)
             let newLocation = CLLocation(latitude: centerLat!, longitude: centerLon!)
             mapView.setRegion(newRegion, animated: false)
+            self.showAllPins(mapPins)
+
         }
 
     }
@@ -52,13 +69,13 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
-        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
-            guard error == nil else {
-                print("more error")
-                return
-            }
-        }
-        mapView.addAnnotation(tappedPointAnnotation)
+//        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
+//            guard error == nil else {
+//                print("more error")
+//                return
+//            }
+//        }
+        self.addPin(pointAnnotation: tappedPointAnnotation)
     }
 }
 
@@ -73,4 +90,39 @@ extension MapViewController {
         UserDefaults.standard.set(initialMapData, forKey: "locationData")
         UserDefaults.standard.synchronize()
     }
+}
+
+// Mark -- Pin  methods
+extension MapViewController {
+
+    func addPin(pointAnnotation:MKPointAnnotation) {
+        let pin = Pin(context: dataController.viewContext)
+        pin.latitude = pointAnnotation.coordinate.latitude
+        pin.longitude = pointAnnotation.coordinate.longitude
+        do {
+            try dataController.viewContext.save()
+            print("pins saved")
+        }
+        catch {
+            fatalError("Could not save")
+        }
+        mapView.addAnnotation(pointAnnotation)
+    }
+
+    func showAllPins(_ pins:[Pin]?){
+        var annotations = [MKPointAnnotation]()
+        if let pinArray = pins {
+
+            for pin in pinArray {
+            let pinAnnotation = MKPointAnnotation()
+
+            pinAnnotation.coordinate.longitude = pin.longitude
+            pinAnnotation.coordinate.latitude = pin.latitude
+            annotations.append(pinAnnotation)
+            self.mapView.addAnnotation(pinAnnotation≥)
+        }
+        print(annotations.count)
+        self.mapView.addAnnotations(annotations)
+    }
+}
 }

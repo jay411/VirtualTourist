@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5vz-78-uNa">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5vz-78-uNa">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -52,13 +52,13 @@
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbZ-L4-78q">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <connections>
-                                    <segue destination="7eT-DL-reO" kind="embed" id="q5T-s3-VMh"/>
+                                    <segue destination="7eT-DL-reO" kind="embed" identifier="mapPinSegue" id="q5T-s3-VMh"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rEH-kV-wmW">
                                 <rect key="frame" x="0.0" y="408" width="375" height="259"/>
                                 <connections>
-                                    <segue destination="vqK-lI-imc" kind="embed" id="Fdd-m8-Vod"/>
+                                    <segue destination="vqK-lI-imc" kind="embed" identifier="photoCollectionSegue" id="Fdd-m8-Vod"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -110,6 +110,8 @@
                             <outlet property="delegate" destination="vqK-lI-imc" id="pB9-ie-Uf8"/>
                         </connections>
                     </collectionView>
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYS-n7-jkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
