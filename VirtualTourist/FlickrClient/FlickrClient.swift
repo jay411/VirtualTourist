@@ -37,12 +37,11 @@ class FlickrClient {
     func getImageUrls(_ parameters: [String:AnyObject], _ completionHandlerForGetImages: @escaping (_ success: Bool,_ error: Error?)  -> Void) {
 
         let requestURL = URLRequest(url: flickrURLFromParameters(parameters))
-        print(requestURL)
         Alamofire.request(requestURL).validate().responseJSON { (response) in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
-                print(json["photos"]["photo"][0][FlickrResponseKeys.MediumURL])
+                print(json["photos"])
 
             case .failure(let error):
                 print("error",error.localizedDescription)

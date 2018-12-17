@@ -7,12 +7,17 @@
 //
 
 import UIKit
-
+import CoreLocation
 class PhotoCellsViewController: UICollectionViewController {
+
+    var dataController:DataController!
+    var pinLatitude:CLLocationDegrees?
+    var pinLongitude:CLLocationDegrees?
+    var image = UIImage(named: "sample")
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        var image = UIImage(named: "sample")
         // Do any additional setup after loading the view.
     }
 
@@ -36,13 +41,16 @@ class PhotoCellsViewController: UICollectionViewController {
 
 extension PhotoCellsViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let numberOfItems: Int = 200
+        let numberOfItems: Int = 15
         return numberOfItems
     }
 
+    override func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 3
+    }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) 
-        cell.backgroundColor = UIColor.black
+        let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
+        cell.photoImage?.image = self.image
         return cell
     }
 }

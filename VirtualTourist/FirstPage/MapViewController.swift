@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import CoreData
 
-class MapViewController: UIViewController,MKMapViewDelegate {
+class MapViewController: UIViewController,MKMapViewDelegate,NSFetchedResultsControllerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     var initialMapData: [String:CLLocationDegrees]?
@@ -19,8 +19,28 @@ class MapViewController: UIViewController,MKMapViewDelegate {
     var dataController:DataController!
     var fetchedResultsController:NSFetchedResultsController<Pin>!
     var mapPins: [Pin]?
-    var pinAnnotations: [MKPointAnnotation]?
+    var pinAnnotation = MKPointAnnotation()
+    var selectedPin: MKAnnotation?
+    var tappedPin:Pin?
 
+//    fileprivate func setupFetchedResultsController() {
+//        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+//        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//
+//        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+//        fetchedResultsController.delegate = self
+//
+//        do {
+//            try fetchedResultsController.performFetch()
+//        } catch {
+//            fatalError("error in fetching results: \(error.localizedDescription)")
+//        }
+//        if let _ = fetchedResultsController.fetchedObjects {
+//            self.mapPins = fetchedResultsController.fetchedObjects
+//        }
+//
+//    }
     private func fetchPins() {
         let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
             if let result = try? dataController.viewContext.fetch(fetchRequest) {
@@ -36,13 +56,13 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         tap.delegate = self as? UIGestureRecognizerDelegate
         mapView.addGestureRecognizer(tap)
         self.fetchPins()
+//        self.setupFetchedResultsController()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    fileprivate func setSpan() {
         initialMapData = UserDefaults.standard.value(forKey: "locationData") as? [String : CLLocationDegrees]
-         if let mapData = initialMapData, mapData != nil {
+
+        if let mapData = initialMapData {
             let spanLat = mapData["spanLat"]
             let spanLon = mapData["spanLon"]
             let span = MKCoordinateSpan(latitudeDelta: spanLat!, longitudeDelta: spanLon!)
@@ -51,13 +71,18 @@ class MapViewController: UIViewController,MKMapViewDelegate {
             let centerLon = mapData["centerLon"]
             let newCenter = CLLocationCoordinate2DMake(centerLat!, centerLon!)
             let newRegion = MKCoordinateRegion(center: newCenter, span: span)
-            let newLocation = CLLocation(latitude: centerLat!, longitude: centerLon!)
+//            let newLocation = CLLocation(latitude: centerLat!, longitude: centerLon!)
             mapView.setRegion(newRegion, animated: false)
-            self.showAllPins(mapPins)
+        }
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setSpan()
+        self.showAllPins(mapPins)
 
         }
 
-    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -81,8 +106,29 @@ class MapViewController: UIViewController,MKMapViewDelegate {
 
 /// MapView annotation methods
 extension MapViewController {
+
+
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let pointAnnotation = view.annotation {
+            print("view annotation selected")
+            pinAnnotation.coordinate = pointAnnotation.coordinate
+            self.findTappedPin(pinAnnotation)
+        }
+
         self.performSegue(withIdentifier: "segueToPinImages", sender: self)
+
+    }
+
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let _ = tappedPin {
+        if segue.identifier == "segueToPinImages" {
+            let destination = segue.destination as! PhotoViewController
+            destination.dataController = self.dataController
+            destination.pinRecived = pinAnnotation
+            destination.selectedPin = tappedPin
+            }
+        }
     }
 
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
@@ -119,10 +165,22 @@ extension MapViewController {
             pinAnnotation.coordinate.longitude = pin.longitude
             pinAnnotation.coordinate.latitude = pin.latitude
             annotations.append(pinAnnotation)
-            self.mapView.addAnnotation(pinAnnotation≥)
+            self.mapView.addAnnotation(pinAnnotation)
         }
-        print(annotations.count)
         self.mapView.addAnnotations(annotations)
     }
 }
+
+    func findTappedPin(_ findPin:MKPointAnnotation?){
+//        print(fetchedResultsController.fetchedObjects!)
+        if let pins = mapPins {
+            for randomPin in pins {
+                if (randomPin.latitude == findPin?.coordinate.latitude && randomPin.longitude == findPin?.coordinate.longitude){
+                    print("found pin",randomPin)
+                    self.tappedPin = randomPin
+                }
+            }
+        }
+    }
+
 }
