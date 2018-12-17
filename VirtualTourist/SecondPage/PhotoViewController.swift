@@ -15,7 +15,7 @@ class PhotoViewController: UIViewController {
 
     var dataController:DataController!
     var pinRecived: MKPointAnnotation?
-    var selectedPin:Pin?
+    var selectedPin:Pin!
 
 
     override func viewDidLoad() {
@@ -52,6 +52,7 @@ class PhotoViewController: UIViewController {
                 print("transferringPin")
                 destinationViewController.pinLatitude = pin.coordinate.latitude
                 destinationViewController.pinLongitude = pin.coordinate.longitude
+                destinationViewController.selectedPin = selectedPin
             }
         }
     }

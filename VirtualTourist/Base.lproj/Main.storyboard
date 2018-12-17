@@ -124,7 +124,11 @@
                             <outlet property="delegate" destination="vqK-lI-imc" id="pB9-ie-Uf8"/>
                         </connections>
                     </collectionView>
-                    <toolbarItems/>
+                    <toolbarItems>
+                        <barButtonItem width="117" style="plain" systemItem="fixedSpace" id="Kbf-5Q-oxJ"/>
+                        <barButtonItem title="New Collection" id="0XV-3q-2HB"/>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="3Ds-6P-ZWn"/>
+                    </toolbarItems>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYS-n7-jkm" userLabel="First Responder" sceneMemberID="firstResponder"/>

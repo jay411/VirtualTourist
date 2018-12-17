@@ -8,18 +8,42 @@
 
 import UIKit
 import CoreLocation
-class PhotoCellsViewController: UICollectionViewController {
+import CoreData
+
+class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsControllerDelegate {
 
     var dataController:DataController!
     var pinLatitude:CLLocationDegrees?
     var pinLongitude:CLLocationDegrees?
     var image = UIImage(named: "sample")
+    var selectedPin:Pin!
+    
+    var fetchedResultsController:NSFetchedResultsController<PinPhotos>!
 
+    fileprivate func setupFetchResultsController() {
+        let fetchRequest:NSFetchRequest<PinPhotos> = PinPhotos.fetchRequest()
+
+        let sortDescriptor = NSSortDescriptor(key: "photos", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+        let predicate = NSPredicate(format: "pin == %@", selectedPin)
+        fetchRequest.predicate = predicate
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        do {
+            try fetchedResultsController.performFetch()
+        } catch  {
+            fatalError("could not perform fetch:\(error.localizedDescription)")
+        }
+
+        fetchedResultsController.delegate = self
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        self.setupFetchResultsController()
+        print("fetched objects",fetchedResultsController.fetchedObjects!.count)
     }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

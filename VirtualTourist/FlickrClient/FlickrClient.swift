@@ -41,7 +41,7 @@ class FlickrClient {
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
-                print(json["photos"])
+                print(json["photos"]["pages"])
 
             case .failure(let error):
                 print("error",error.localizedDescription)

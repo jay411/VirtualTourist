@@ -11,36 +11,20 @@ import MapKit
 import CoreLocation
 import CoreData
 
-class MapViewController: UIViewController,MKMapViewDelegate,NSFetchedResultsControllerDelegate {
+class MapViewController: UIViewController,MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
     var initialMapData: [String:CLLocationDegrees]?
 
     var dataController:DataController!
-    var fetchedResultsController:NSFetchedResultsController<Pin>!
     var mapPins: [Pin]?
     var pinAnnotation = MKPointAnnotation()
     var selectedPin: MKAnnotation?
     var tappedPin:Pin?
 
-//    fileprivate func setupFetchedResultsController() {
-//        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-//        let sortDescriptor = NSSortDescriptor(key: "latitude", ascending: true)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//
-//        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-//        fetchedResultsController.delegate = self
-//
-//        do {
-//            try fetchedResultsController.performFetch()
-//        } catch {
-//            fatalError("error in fetching results: \(error.localizedDescription)")
-//        }
-//        if let _ = fetchedResultsController.fetchedObjects {
-//            self.mapPins = fetchedResultsController.fetchedObjects
-//        }
-//
-//    }
+
+
+
     private func fetchPins() {
         let fetchRequest:NSFetchRequest<Pin> = Pin.fetchRequest()
             if let result = try? dataController.viewContext.fetch(fetchRequest) {
@@ -94,13 +78,16 @@ class MapViewController: UIViewController,MKMapViewDelegate,NSFetchedResultsCont
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
-//        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
-//            guard error == nil else {
-//                print("more error")
-//                return
-//            }
-//        }
-        self.addPin(pointAnnotation: tappedPointAnnotation)
+        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
+            guard error == nil else {
+                print("more error")
+                return
+            }
+        }
+        performUIUpdatesOnMain {
+            self.addPin(pointAnnotation: tappedPointAnnotation)
+
+        }
     }
 }
 
@@ -172,7 +159,6 @@ extension MapViewController {
 }
 
     func findTappedPin(_ findPin:MKPointAnnotation?){
-//        print(fetchedResultsController.fetchedObjects!)
         if let pins = mapPins {
             for randomPin in pins {
                 if (randomPin.latitude == findPin?.coordinate.latitude && randomPin.longitude == findPin?.coordinate.longitude){
