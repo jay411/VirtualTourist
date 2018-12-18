@@ -53,15 +53,15 @@
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bbZ-L4-78q" userLabel="MapContainer">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="352"/>
                                         <connections>
                                             <segue destination="7eT-DL-reO" kind="embed" identifier="mapPinSegue" id="q5T-s3-VMh"/>
                                         </connections>
                                     </containerView>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rEH-kV-wmW" userLabel="CellsContainer">
-                                        <rect key="frame" x="0.0" y="331" width="375" height="272"/>
+                                        <rect key="frame" x="0.0" y="353" width="375" height="250"/>
                                         <connections>
-                                            <segue destination="vqK-lI-imc" kind="embed" identifier="photoCollectionSegue" id="Fdd-m8-Vod"/>
+                                            <segue destination="vqK-lI-imc" kind="embed" identifier="photoCollectionSegue" id="uio-EJ-1uu"/>
                                         </connections>
                                     </containerView>
                                 </subviews>
@@ -81,12 +81,12 @@
             </objects>
             <point key="canvasLocation" x="2522.4000000000001" y="42.728635682158924"/>
         </scene>
-        <!--Photo Cells View Controller-->
+        <!--PhotoCellsViewController-->
         <scene sceneID="QqL-bH-sRc">
             <objects>
-                <collectionViewController id="vqK-lI-imc" customClass="PhotoCellsViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController id="vqK-lI-imc" userLabel="PhotoCellsViewController" customClass="PhotoCellsViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="23v-vd-8hS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="272"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="206"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="94g-rN-eGD">
@@ -104,7 +104,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uhh-eY-dRI" userLabel="photo">
-                                            <rect key="frame" x="0.0" y="0.0" width="100" height="0.0"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
                                         </imageView>
                                     </subviews>
                                 </view>
@@ -125,15 +125,19 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem width="117" style="plain" systemItem="fixedSpace" id="Kbf-5Q-oxJ"/>
-                        <barButtonItem title="New Collection" id="0XV-3q-2HB"/>
-                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="3Ds-6P-ZWn"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="hsR-DK-Rpk"/>
+                        <barButtonItem title="New Collection" id="BgF-MY-vts">
+                            <connections>
+                                <action selector="newCollection:" destination="vqK-lI-imc" id="YUY-fY-YTK"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="I7O-fk-CSR"/>
                     </toolbarItems>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WYS-n7-jkm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3392.8000000000002" y="296.85157421289358"/>
+            <point key="canvasLocation" x="4332" y="296.85157421289358"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="IAF-kJ-fSw">
@@ -158,11 +162,11 @@
             <objects>
                 <viewController title="PinMapViewController" id="7eT-DL-reO" customClass="PinMapViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sHZ-fu-WbU">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="352"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="iCA-Oq-Ztr" userLabel="pinMapView">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="330"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="352"/>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

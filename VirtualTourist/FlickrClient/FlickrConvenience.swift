@@ -11,7 +11,7 @@ import CoreLocation
 
 extension FlickrClient {
 
-    func getImagesForPoint(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees, _ completionHandlerForGet: @escaping(_ success: Bool, _ error: Error?) -> Void) {
+    func getImagesForPoint(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees, _ completionHandlerForGet: @escaping(_ success: Bool,_ imageArray:[Data]?, _ error: Error?) -> Void) {
         let methodParameters = [
             FlickrParameterKeys.Method: FlickrParameterValues.SearchMethod,
             FlickrParameterKeys.APIKey: FlickrParameterValues.APIKey,
@@ -21,11 +21,16 @@ extension FlickrClient {
             FlickrParameterKeys.Format: FlickrParameterValues.ResponseFormat,
             FlickrParameterKeys.NoJSONCallback: FlickrClient.FlickrParameterValues.DisableJSONCallback
         ]
-        self.getImageUrls(methodParameters as [String:AnyObject]) { success, error in
+        self.getImageUrls(methodParameters as [String:AnyObject]) { success, data, error in
             guard error == nil else {
                 print("error")
-                return
+                return completionHandlerForGet(false,nil,error)
             }
+            guard data != nil else {
+                let error:Error = NSError(domain: "no images found", code: 1, userInfo: nil)
+                return completionHandlerForGet(false,nil,error)
+            }
+            return completionHandlerForGet(success,data,nil)
         }
     }
     private func bboxString(_ latitude: CLLocationDegrees, _ longitude: CLLocationDegrees) -> String {

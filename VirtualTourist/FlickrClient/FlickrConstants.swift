@@ -30,7 +30,7 @@ extension FlickrClient {
         static let SafeSearch = "safe_search"
         static let Text = "text"
         static let BoundingBox = "bbox"
-        static let Page = "page"
+        static let page = "page"
         static let latitude = "lat"
         static let longitude = "lon"
     }

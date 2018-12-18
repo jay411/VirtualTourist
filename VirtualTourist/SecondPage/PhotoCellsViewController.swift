@@ -16,8 +16,13 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
     var pinLatitude:CLLocationDegrees?
     var pinLongitude:CLLocationDegrees?
     var image = UIImage(named: "sample")
+    var iData: Data?
     var selectedPin:Pin!
+
     
+    @IBAction func newCollection(_ sender: Any) {
+    }
+
     var fetchedResultsController:NSFetchedResultsController<PinPhotos>!
 
     fileprivate func setupFetchResultsController() {
@@ -25,7 +30,7 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
 
         let sortDescriptor = NSSortDescriptor(key: "photos", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]
-        let predicate = NSPredicate(format: "pin == %@", selectedPin)
+        let predicate = NSPredicate(format: "pin == %@", self.selectedPin)
         fetchRequest.predicate = predicate
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
@@ -41,7 +46,17 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setupFetchResultsController()
-        print("fetched objects",fetchedResultsController.fetchedObjects!.count)
+//        print("fetched objects",fetchedResultsController.fetchedObjects!.count)
+
+//        let imageString = "https://farm5.staticflickr.com//4900//45381725435_75af94ccd5.jpg"
+//        let imageURL = URL(string: imageString )
+//        if let imageData = try? Data(contentsOf: imageURL!) {
+//            self.iData = imageData
+//        } else {
+//            fatalError("Image does not exist at \(imageURL)")
+//        }
+
+
     }
 
 
@@ -74,7 +89,13 @@ extension PhotoCellsViewController {
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
-        cell.photoImage?.image = self.image
+        cell.backgroundColor = UIColor.blue
+//        cell.photoImage?.image = UIImage(data:self.iData!)
         return cell
     }
+}
+
+// Mark: network calls to get photos
+extension PhotoViewController {
+    
 }

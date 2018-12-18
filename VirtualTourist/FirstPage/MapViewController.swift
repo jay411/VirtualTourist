@@ -30,6 +30,7 @@ class MapViewController: UIViewController,MKMapViewDelegate {
             if let result = try? dataController.viewContext.fetch(fetchRequest) {
                 print("pins found",result.count)
                 mapPins = result
+                print(mapPins?.count)
             }
     }
 
@@ -40,7 +41,6 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         tap.delegate = self as? UIGestureRecognizerDelegate
         mapView.addGestureRecognizer(tap)
         self.fetchPins()
-//        self.setupFetchedResultsController()
         // Do any additional setup after loading the view, typically from a nib.
     }
     fileprivate func setSpan() {
@@ -55,7 +55,6 @@ class MapViewController: UIViewController,MKMapViewDelegate {
             let centerLon = mapData["centerLon"]
             let newCenter = CLLocationCoordinate2DMake(centerLat!, centerLon!)
             let newRegion = MKCoordinateRegion(center: newCenter, span: span)
-//            let newLocation = CLLocation(latitude: centerLat!, longitude: centerLon!)
             mapView.setRegion(newRegion, animated: false)
         }
     }
@@ -78,16 +77,13 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
-        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success, error) in
-            guard error == nil else {
-                print("more error")
-                return
-            }
-        }
-        performUIUpdatesOnMain {
+//        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success,data, error) in
+//            guard error == nil else {
+//                print("more error")
+//                return
+//            }
+//        }
             self.addPin(pointAnnotation: tappedPointAnnotation)
-
-        }
     }
 }
 
@@ -99,9 +95,9 @@ extension MapViewController {
         if let pointAnnotation = view.annotation {
             print("view annotation selected")
             pinAnnotation.coordinate = pointAnnotation.coordinate
-            self.findTappedPin(pinAnnotation)
-        }
-
+                self.findTappedPin(self.pinAnnotation)
+            }
+        print(self.tappedPin == nil)
         self.performSegue(withIdentifier: "segueToPinImages", sender: self)
 
     }
@@ -109,11 +105,12 @@ extension MapViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let _ = tappedPin {
-        if segue.identifier == "segueToPinImages" {
-            let destination = segue.destination as! PhotoViewController
-            destination.dataController = self.dataController
-            destination.pinRecived = pinAnnotation
-            destination.selectedPin = tappedPin
+            if segue.identifier == "segueToPinImages" {
+                print("seguing to collection")
+                let destination = segue.destination as! PhotoViewController
+                destination.dataController = self.dataController
+                destination.pinRecived = pinAnnotation
+                destination.selectedPin = self.tappedPin
             }
         }
     }
@@ -134,7 +131,7 @@ extension MapViewController {
         pin.longitude = pointAnnotation.coordinate.longitude
         do {
             try dataController.viewContext.save()
-            print("pins saved")
+            print("pin saved")
         }
         catch {
             fatalError("Could not save")
@@ -154,13 +151,16 @@ extension MapViewController {
             annotations.append(pinAnnotation)
             self.mapView.addAnnotation(pinAnnotation)
         }
-        self.mapView.addAnnotations(annotations)
     }
 }
 
     func findTappedPin(_ findPin:MKPointAnnotation?){
+        // fetch all pins here as well
+        self.fetchPins()
         if let pins = mapPins {
             for randomPin in pins {
+                print(pins.count)
+                print("looking for pins")
                 if (randomPin.latitude == findPin?.coordinate.latitude && randomPin.longitude == findPin?.coordinate.longitude){
                     print("found pin",randomPin)
                     self.tappedPin = randomPin

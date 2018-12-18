@@ -20,7 +20,6 @@ class PhotoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
     }
 
@@ -52,7 +51,7 @@ class PhotoViewController: UIViewController {
                 print("transferringPin")
                 destinationViewController.pinLatitude = pin.coordinate.latitude
                 destinationViewController.pinLongitude = pin.coordinate.longitude
-                destinationViewController.selectedPin = selectedPin
+                destinationViewController.selectedPin = self.selectedPin
             }
         }
     }
