@@ -89,7 +89,9 @@ class MapViewController: UIViewController,MKMapViewDelegate {
                 tappedPointAnnotation.title = "annotation"
             }
         }
+        if sender.state.rawValue == 3 {
         self.addPin(pointAnnotation: tappedPointAnnotation)
+        }
     }
 }
 
