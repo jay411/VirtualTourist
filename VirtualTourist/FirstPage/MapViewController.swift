@@ -128,26 +128,6 @@ extension MapViewController {
         UserDefaults.standard.synchronize()
     }
 
-//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//        let reuseId = "pin"
-//
-//        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-//
-//        if pinView == nil {
-//
-//            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-//            pinView!.pinTintColor = .blue
-//            pinView!.canShowCallout = true
-//            pinView!.frame.size.width = 22
-//            pinView!.frame.size.height = 22
-//            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-//        }
-//        else {
-//            pinView!.annotation = annotation
-//        }
-//
-//        return pinView
-//    }
       func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if let pointAnnotation = view.annotation {
             print("view annotation selected")
@@ -167,6 +147,7 @@ extension MapViewController {
         let pin = Pin(context: dataController.viewContext)
         pin.latitude = pointAnnotation.coordinate.latitude
         pin.longitude = pointAnnotation.coordinate.longitude
+        pin.address = pointAnnotation.title
         do {
             try dataController.viewContext.save()
             print("pin saved")
@@ -186,7 +167,7 @@ extension MapViewController {
 
             pinAnnotation.coordinate.longitude = pin.longitude
             pinAnnotation.coordinate.latitude = pin.latitude
-            pinAnnotation.title = "annotation"
+            pinAnnotation.title = pin.address
             annotations.append(pinAnnotation)
             self.mapView.addAnnotation(pinAnnotation)
         }
