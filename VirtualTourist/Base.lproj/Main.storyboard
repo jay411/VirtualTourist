@@ -101,6 +101,10 @@
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
+                                        <activityIndicatorView key="backgroundView" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="LYD-Up-W3V">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </activityIndicatorView>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="photoCell" id="bAW-xb-9OQ" customClass="PhotoCollectionViewCell" customModule="VirtualTourist" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
@@ -131,7 +135,7 @@
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UoS-fI-2Bp">
                                         <rect key="frame" x="0.0" y="220" width="375" height="30"/>
-                                        <state key="normal" title="Button"/>
+                                        <state key="normal" title="New Collection"/>
                                         <connections>
                                             <action selector="newCollection:" destination="LGa-3I-i4C" eventType="touchUpInside" id="mXo-v9-Gi2"/>
                                         </connections>
@@ -149,6 +153,8 @@
                         <viewLayoutGuide key="safeArea" id="tyq-3X-lWD"/>
                     </view>
                     <connections>
+                        <outlet property="loadingIndicator" destination="LYD-Up-W3V" id="5JJ-9m-sS9"/>
+                        <outlet property="newCollectionButton" destination="UoS-fI-2Bp" id="1cj-ID-PU3"/>
                         <outlet property="photoCollectionView" destination="wUJ-mZ-anX" id="Isl-pM-6m2"/>
                     </connections>
                 </viewController>

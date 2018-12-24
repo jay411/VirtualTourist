@@ -38,6 +38,8 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         super.viewDidLoad()
         mapView.delegate = self
         let tap = UILongPressGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        tap.minimumPressDuration = 0.5
+        tap.numberOfTouchesRequired = 1
         tap.delegate = self as? UIGestureRecognizerDelegate
         mapView.addGestureRecognizer(tap)
         self.fetchPins()
@@ -77,6 +79,16 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
+        findAddress(tappedPointAnnotation.coordinate) { (addressString) in
+            if let addressTitle = addressString {
+                print(addressTitle)
+                tappedPointAnnotation.title = addressTitle
+            }
+            else {
+                print("address nil")
+                tappedPointAnnotation.title = "annotation"
+            }
+        }
         self.addPin(pointAnnotation: tappedPointAnnotation)
     }
 }
@@ -196,4 +208,25 @@ extension MapViewController {
         }
     }
 
+}
+
+extension MapViewController {
+    func findAddress(_ coordinate:CLLocationCoordinate2D,_ completionHandler: @escaping (String?)->Void) {
+        let geocoder = CLGeocoder()
+
+        // Look up the location and pass it to the completion handler
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        geocoder.reverseGeocodeLocation(location,
+                                        completionHandler: { (placemarks, error) in
+                                            if error == nil {
+                                                let firstLocation = placemarks?[0].name
+                                                print (firstLocation)
+                                                completionHandler(firstLocation)
+                                            }
+                                            else {
+                                                // An error occurred during geocoding.
+                                                completionHandler(nil)
+                                            }
+        })
+     }
 }

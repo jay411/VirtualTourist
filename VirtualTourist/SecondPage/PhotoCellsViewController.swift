@@ -12,7 +12,9 @@ import CoreData
 
 class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate{
     @IBOutlet weak var photoCollectionView: UICollectionView!
-
+    @IBOutlet weak var newCollectionButton: UIButton!
+    
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     var dataController:DataController!
     var pinLatitude:CLLocationDegrees?
     var pinLongitude:CLLocationDegrees?
@@ -95,7 +97,10 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
 
     func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
         print("get images called")
-
+        self.newCollectionButton.isEnabled = false
+        self.newCollectionButton.titleLabel?.text = "Loading New Collection....."
+        self.loadingIndicator.startAnimating()
+        self.loadingIndicator.isHidden = false
         FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
             guard error == nil else {
                 fatalError("no images found")
@@ -117,6 +122,10 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                     print("performing fetch")
                     self.performFetch()
                     self.photoCollectionView.reloadData()
+                    self.loadingIndicator.stopAnimating()
+                    self.loadingIndicator.isHidden = true
+                    self.newCollectionButton.titleLabel?.text = "New Collection"
+                    self.newCollectionButton.isEnabled = true
                 }
             }
         }
