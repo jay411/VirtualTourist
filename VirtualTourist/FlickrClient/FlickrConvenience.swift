@@ -23,7 +23,6 @@ extension FlickrClient {
         ]
         self.getImageUrls(methodParameters as [String:AnyObject]) { success, data, error in
             guard error == nil else {
-                print("error")
                 return completionHandlerForGet(false,nil,error)
             }
             guard data != nil else {

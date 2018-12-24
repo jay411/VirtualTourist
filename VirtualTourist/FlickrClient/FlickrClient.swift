@@ -42,6 +42,12 @@ class FlickrClient {
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
+                if let pages = json["photos"]["pages"].int {
+                    if pages == 0 {
+                        var error:Error = NSError(domain: "no images", code: 1, userInfo: nil)
+                        return completionHandlerForGetImages(true,nil,error)
+                    }
+                }
                 if let pagesInt = json["photos"]["pages"].int {
                     self.pages = pagesInt
                     self.getImageUrlsFromPage(parameters, pagesInt, { (success,data,error) in
@@ -58,7 +64,7 @@ class FlickrClient {
                     })
                 }
             case .failure(let error):
-                print("error",error.localizedDescription)
+                return completionHandlerForGetImages(false,nil,error)
             }
         }
     }
@@ -67,10 +73,12 @@ class FlickrClient {
         var newParameteres = parameters
         newParameteres[FlickrParameterKeys.page] = Int(arc4random_uniform(UInt32(pages))) as AnyObject
         print("random page",newParameteres[FlickrParameterKeys.page])
-        let requestUrl = URLRequest(url: flickrURLFromParameters(newParameteres))
+        var requestUrl = URLRequest(url: flickrURLFromParameters(newParameteres))
+        requestUrl.timeoutInterval = 60
         Alamofire.request(requestUrl).responseJSON { (response) in
             switch response.result{
             case .failure(let error):
+                print("network error")
                 return completionHandlerForGetFromPage(false,nil,error)
             case .success(let value):
                 let json = JSON(value)

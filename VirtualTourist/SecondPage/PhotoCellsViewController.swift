@@ -103,9 +103,10 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
         self.loadingIndicator.isHidden = false
         FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
             guard error == nil else {
-                self.displayAlert("Photos Error", "\(String(describing: error?.localizedDescription))")
+                self.displayAlert("Photos Error", "\(String(describing: error!.localizedDescription))")
                 return
             }
+    
             if let photosArray = photos {
                 self.photoDataArray = photosArray
                 for item in photosArray {
