@@ -11,9 +11,9 @@ import CoreLocation
 import CoreData
 
 class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate{
+
     @IBOutlet weak var photoCollectionView: UICollectionView!
     @IBOutlet weak var newCollectionButton: UIButton!
-    
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     var dataController:DataController!
     var pinLatitude:CLLocationDegrees?
@@ -36,7 +36,7 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                 try dataController.viewContext.save()
             }
             catch{
-                fatalError("could not delete data")
+                self.displayAlert("Database error", "Error deleting existing data")
             }
         }
         self.getImages(pinLatitude!, pinLongitude!)
@@ -95,8 +95,6 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
         fetchedResultsController = nil
     }
 
-
-
     func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
         print("get images called")
         self.newCollectionButton.isEnabled = false
@@ -105,7 +103,8 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
         self.loadingIndicator.isHidden = false
         FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
             guard error == nil else {
-                fatalError("no images found")
+                self.displayAlert("Photos Error", "\(String(describing: error?.localizedDescription))")
+                return
             }
             if let photosArray = photos {
                 self.photoDataArray = photosArray
@@ -117,7 +116,7 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                             try self.dataController.viewContext.save()
                         }
                         catch {
-                            fatalError("Could not save")
+                            self.displayAlert("Database Error", "Could not save")
                         }
                 }
                 performUIUpdatesOnMain {
@@ -131,32 +130,25 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                 }
             }
         }
-
-
     }
-
-
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
 // Mark: collection view methods
-extension PhotoCellsViewController {
+extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let width = UIScreen.main.bounds.width
+        let scale = (width / 3) - 6
+
+        return CGSize(width: scale, height: scale)
+    }
 
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return fetchedResultsController.sections?[0].numberOfObjects ?? 20
@@ -165,11 +157,12 @@ extension PhotoCellsViewController {
      func numberOfSections(in collectionView: UICollectionView) -> Int {
         return fetchedResultsController.sections?.count ?? 3
     }
+
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let aCell = fetchedResultsController.object(at: indexPath)
 
         let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
-
+        
         if let photoData = aCell.photos{
             print("photo data found")
             cell.cellImage?.image = UIImage(data:photoData)
@@ -181,8 +174,7 @@ extension PhotoCellsViewController {
     }
 }
 
-// Mark: network calls to get photos
-extension PhotoViewController {
-
+// Mark: cell updates
+extension PhotoCellsViewController {
 
 }

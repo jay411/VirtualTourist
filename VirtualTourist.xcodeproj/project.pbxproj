@@ -24,6 +24,7 @@
 		93571FDE2188398900367A86 /* VirtualTouristUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93571FDD2188398900367A86 /* VirtualTouristUITests.swift */; };
 		9357C08C219D3CDF00AB3E15 /* FlickrClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9357C08B219D3CDF00AB3E15 /* FlickrClient.swift */; };
 		9357C08E219D3D0300AB3E15 /* FlickrConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9357C08D219D3D0300AB3E15 /* FlickrConstants.swift */; };
+		9375D49F21D0ADEB00143F92 /* AlertPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9375D49E21D0ADEB00143F92 /* AlertPopUp.swift */; };
 		93F7332D21A549F700D076F0 /* FlickrConvenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F7332C21A549F700D076F0 /* FlickrConvenience.swift */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 		93571FDF2188398900367A86 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9357C08B219D3CDF00AB3E15 /* FlickrClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrClient.swift; sourceTree = "<group>"; };
 		9357C08D219D3D0300AB3E15 /* FlickrConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrConstants.swift; sourceTree = "<group>"; };
+		9375D49E21D0ADEB00143F92 /* AlertPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopUp.swift; sourceTree = "<group>"; };
 		93F7332C21A549F700D076F0 /* FlickrConvenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrConvenience.swift; sourceTree = "<group>"; };
 		AA640DEE41B75D11903FE068 /* Pods_VirtualTourist.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VirtualTourist.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ACD641C7CBB73216F3F93C08 /* Pods-VirtualTourist.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VirtualTourist.debug.xcconfig"; path = "Target Support Files/Pods-VirtualTourist/Pods-VirtualTourist.debug.xcconfig"; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				93571FC62188398800367A86 /* LaunchScreen.storyboard */,
 				93571FC92188398800367A86 /* Info.plist */,
 				931D06D7219D51DD006609D0 /* GCDBlackBox.swift */,
+				9375D49E21D0ADEB00143F92 /* AlertPopUp.swift */,
 			);
 			path = VirtualTourist;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9375D49F21D0ADEB00143F92 /* AlertPopUp.swift in Sources */,
 				931D06D8219D51DD006609D0 /* GCDBlackBox.swift in Sources */,
 				9357C08E219D3D0300AB3E15 /* FlickrConstants.swift in Sources */,
 				93571FBD2188398700367A86 /* MapViewController.swift in Sources */,
