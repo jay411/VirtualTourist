@@ -20,7 +20,7 @@ class FlickrClient {
         return Singleton.sharedInstance
     }
 
-    private func flickrURLFromParameters(_ parameters: [String:AnyObject]) -> URL {
+     func flickrURLFromParameters(_ parameters: [String:AnyObject]) -> URL {
 
         var components = URLComponents()
         components.scheme = Constants.ApiScheme
@@ -36,7 +36,7 @@ class FlickrClient {
         return components.url!
     }
     // One request to get photos dictionary
-    func getImageUrls(_ parameters: [String:AnyObject], _ completionHandlerForGetImages: @escaping (_ success: Bool,_ imageArray:[Data]?,_ error: Error?)  -> Void) {
+     func getImageUrls(_ parameters: [String:AnyObject], _ completionHandlerForGetImages: @escaping (_ success: Bool,_ imageArray:[Data]?,_ error: Error?)  -> Void) {
 
         let requestURL = URLRequest(url: flickrURLFromParameters(parameters))
         Alamofire.request(requestURL).validate().responseJSON { (response) in
@@ -67,7 +67,7 @@ class FlickrClient {
         }
     }
 
-    func getImageUrlsFromPage(_ parameters: [String:AnyObject],_ pages: Int,_ completionHandlerForGetFromPage: @escaping (_ success: Bool,_ imageArray:[Data]?, _ error:Error?) -> Void) {
+     func getImageUrlsFromPage(_ parameters: [String:AnyObject],_ pages: Int,_ completionHandlerForGetFromPage: @escaping (_ success: Bool,_ imageArray:[Data]?, _ error:Error?) -> Void) {
         var newParameteres = parameters
         newParameteres[FlickrParameterKeys.page] = Int(arc4random_uniform(UInt32(pages))) as AnyObject
         let requestUrl = URLRequest(url: flickrURLFromParameters(newParameteres))

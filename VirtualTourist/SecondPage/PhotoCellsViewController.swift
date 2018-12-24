@@ -10,7 +10,8 @@ import UIKit
 import CoreLocation
 import CoreData
 
-class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsControllerDelegate {
+class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate{
+    @IBOutlet weak var photoCollectionView: UICollectionView!
 
     var dataController:DataController!
     var pinLatitude:CLLocationDegrees?
@@ -18,13 +19,39 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
     var image = UIImage(named: "sample")
     var iData: Data?
     var selectedPin:Pin!
+    var photoDataArray:[Data]?
+
 
     
     @IBAction func newCollection(_ sender: Any) {
+        if let fetchedObjects = fetchedResultsController.fetchedObjects {
+            if fetchedObjects.count != 0 {
+                for item in fetchedObjects {
+                    dataController.viewContext.delete(item)
+                }
+            }
+        }
+        self.getImages(pinLatitude!, pinLongitude!)
+        performUIUpdatesOnMain {
+            self.photoCollectionView.reloadData()
+
+        }
     }
 
     var fetchedResultsController:NSFetchedResultsController<PinPhotos>!
-
+//
+//    func fetchPhotos(_ selectedPin:Pin) {
+//        let fetchRequest:NSFetchRequest<PinPhotos> = PinPhotos.fetchRequest()
+//
+//        let sortDescriptor = NSSortDescriptor(key: "photos", ascending: false)
+//        fetchRequest.sortDescriptors = [sortDescriptor]
+//        let predicate = NSPredicate(format: "pin == %@", selectedPin)
+//        fetchRequest.predicate = predicate
+//        if let results = try? dataController.viewContext.fetch(fetchRequest) {
+//            print("photos",results)
+//        }
+//
+//    }
     fileprivate func setupFetchResultsController() {
         let fetchRequest:NSFetchRequest<PinPhotos> = PinPhotos.fetchRequest()
 
@@ -36,28 +63,68 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
         do {
             try fetchedResultsController.performFetch()
         } catch  {
-            fatalError("could not perform fetch:\(error.localizedDescription)")
+            print("could not fetch")
         }
+    }
 
-        fetchedResultsController.delegate = self
+    fileprivate func performFetch() {
+        do {
+            try fetchedResultsController.performFetch()
+        } catch  {
+            print("could not fetch")
+        }
+        print(fetchedResultsController.fetchedObjects!.count)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.setupFetchResultsController()
-//        print("fetched objects",fetchedResultsController.fetchedObjects!.count)
-
-//        let imageString = "https://farm5.staticflickr.com//4900//45381725435_75af94ccd5.jpg"
-//        let imageURL = URL(string: imageString )
-//        if let imageData = try? Data(contentsOf: imageURL!) {
-//            self.iData = imageData
-//        } else {
-//            fatalError("Image does not exist at \(imageURL)")
-//        }
-
-
+        photoCollectionView.delegate = self
+        photoCollectionView.dataSource = self
+        if fetchedResultsController.fetchedObjects!.count == 0 {
+            print("fetch results count (photos):",fetchedResultsController.fetchedObjects!.count)
+            self.getImages(pinLatitude!, pinLongitude!)
+        }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        print("view will appear called")
+        super.viewWillAppear(animated)
+        setupFetchResultsController()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        fetchedResultsController = nil
+    }
+
+
+
+    func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
+        print("get images called")
+
+        FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
+            guard error == nil else {
+                fatalError("no images found")
+            }
+            if let photosArray = photos {
+                self.photoDataArray = photosArray
+                for item in photosArray {
+                    let photo = PinPhotos(context: self.dataController.viewContext)
+                    photo.photos = item
+                    photo.pin = self.selectedPin
+                        do {
+                            try self.dataController.viewContext.save()
+                        }
+                        catch {
+                            fatalError("Could not save")
+                        }
+                }
+            }
+        }
+        self.performFetch()
+        self.photoCollectionView.reloadData()
+    }
+
 
 
     override func didReceiveMemoryWarning() {
@@ -78,24 +145,35 @@ class PhotoCellsViewController: UICollectionViewController,NSFetchedResultsContr
 
 }
 
+// Mark: collection view methods
 extension PhotoCellsViewController {
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let numberOfItems: Int = 15
-        return numberOfItems
+
+     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return fetchedResultsController.sections?[0].numberOfObjects ?? 20
     }
 
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 3
+     func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return fetchedResultsController.sections?.count ?? 3
     }
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let aCell = fetchedResultsController.object(at: indexPath)
+
         let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
+
         cell.backgroundColor = UIColor.blue
-//        cell.photoImage?.image = UIImage(data:self.iData!)
+        if let photoData = aCell.photos{
+            print("photo data found")
+            cell.cellImage?.image = UIImage(data:photoData)
+        }
+        if let photoData = self.photoDataArray?[indexPath.row] {
+            cell.cellImage?.image = UIImage(data:photoData)
+        }
         return cell
     }
 }
 
 // Mark: network calls to get photos
 extension PhotoViewController {
-    
+
+
 }

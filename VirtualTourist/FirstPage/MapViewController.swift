@@ -77,13 +77,7 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
         tappedPointAnnotation.coordinate = tappedLocationCoordinate
-//        FlickrClient.sharedInstance().getImagesForPoint(tappedPointAnnotation.coordinate.latitude, tappedPointAnnotation.coordinate.longitude) { (success,data, error) in
-//            guard error == nil else {
-//                print("more error")
-//                return
-//            }
-//        }
-            self.addPin(pointAnnotation: tappedPointAnnotation)
+        self.addPin(pointAnnotation: tappedPointAnnotation)
     }
 }
 
@@ -91,16 +85,17 @@ class MapViewController: UIViewController,MKMapViewDelegate {
 extension MapViewController {
 
 
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        if let pointAnnotation = view.annotation {
-            print("view annotation selected")
-            pinAnnotation.coordinate = pointAnnotation.coordinate
-                self.findTappedPin(self.pinAnnotation)
-            }
-        print(self.tappedPin == nil)
-        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
-
-    }
+//    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+//        if let pointAnnotation = view.annotation {
+//            print("view annotation selected")
+//            pinAnnotation.coordinate = pointAnnotation.coordinate
+//            self.findTappedPin(self.pinAnnotation)
+//            mapView.deselectAnnotation(pointAnnotation, animated: true)
+//            }
+//        print(self.tappedPin == nil)
+//        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
+//
+//    }
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -119,6 +114,35 @@ extension MapViewController {
         initialMapData = ["spanLat":mapView.region.span.latitudeDelta, "spanLon":mapView.region.span.longitudeDelta, "centerLat":mapView.centerCoordinate.latitude, "centerLon":mapView.centerCoordinate.longitude]
         UserDefaults.standard.set(initialMapData, forKey: "locationData")
         UserDefaults.standard.synchronize()
+    }
+
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let reuseId = "pin"
+
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+        pinView?.canShowCallout = true
+
+        if pinView == nil {
+            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+            pinView!.pinTintColor = .red
+            pinView!.canShowCallout = true
+            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+        }
+        else {
+            pinView!.annotation = annotation
+        }
+
+        return pinView
+    }
+      func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        if let pointAnnotation = view.annotation {
+            print("view annotation selected")
+            pinAnnotation.coordinate = pointAnnotation.coordinate
+            self.findTappedPin(self.pinAnnotation)
+            mapView.deselectAnnotation(pointAnnotation, animated: true)
+        }
+        print(self.tappedPin == nil)
+        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
     }
 }
 
@@ -148,6 +172,7 @@ extension MapViewController {
 
             pinAnnotation.coordinate.longitude = pin.longitude
             pinAnnotation.coordinate.latitude = pin.latitude
+            pinAnnotation.title = "annotation"
             annotations.append(pinAnnotation)
             self.mapView.addAnnotation(pinAnnotation)
         }
