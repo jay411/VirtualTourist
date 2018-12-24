@@ -32,7 +32,6 @@ class FlickrClient {
             let queryItem = URLQueryItem(name: key, value: "\(value)")
             components.queryItems!.append(queryItem)
         }
-
         return components.url!
     }
     // One request to get photos dictionary
@@ -56,11 +55,8 @@ class FlickrClient {
                         if let imageData = data {
                             return completionHandlerForGetImages(true,imageData,nil)
                         }
-
                     })
                 }
-
-
             case .failure(let error):
                 print("error",error.localizedDescription)
             }
@@ -80,12 +76,9 @@ class FlickrClient {
                 let json = JSON(value)
                 if let imageArray = self.createImageArray(json) {
                     return completionHandlerForGetFromPage(true,imageArray,nil)
-
                 }
-                
             }
         }
-
     }
 
     fileprivate func createImageArray(_ json:JSON) -> [Data]? {
@@ -96,7 +89,7 @@ class FlickrClient {
             return nil
         }
         if let photoArray = json[FlickrResponseKeys.Photos][FlickrResponseKeys.Photo].array {
-            while i<20 && i<json[FlickrResponseKeys.Photos][FlickrResponseKeys.Photo].count {
+            while i<40 && i<json[FlickrResponseKeys.Photos][FlickrResponseKeys.Photo].count {
                 let imageJSON = photoArray[i]
 
                 if let imageString = imageJSON[FlickrResponseKeys.MediumURL].string,let imageURL = URL(string: imageString) {

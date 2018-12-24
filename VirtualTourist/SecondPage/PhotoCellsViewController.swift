@@ -83,13 +83,15 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
             self.getImages(pinLatitude!, pinLongitude!)
         }
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         print("view will appear called")
         super.viewWillAppear(animated)
         setupFetchResultsController()
     }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         fetchedResultsController = nil
     }
 
@@ -168,7 +170,6 @@ extension PhotoCellsViewController {
 
         let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
 
-        cell.backgroundColor = UIColor.blue
         if let photoData = aCell.photos{
             print("photo data found")
             cell.cellImage?.image = UIImage(data:photoData)
