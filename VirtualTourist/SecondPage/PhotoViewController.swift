@@ -42,6 +42,7 @@ class PhotoViewController: UIViewController {
             if let pin = self.pinRecived {
                 print("transferringPin")
                 destinationViewController.pinAnnotation = pin
+                destinationViewController.pinAnnotation?.title = self.selectedPin.address
             }
         }
         if segue.destination is PhotoCellsViewController {
