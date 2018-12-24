@@ -168,6 +168,16 @@ extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
         }
         return cell
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let photoToDelete = fetchedResultsController.object(at: indexPath)
+        dataController.viewContext.delete(photoToDelete)
+        do {
+            try dataController.viewContext.save()
+        } catch  {
+            self.displayAlert("Database Error", "Could not delete photo")
+        }
+    }
 }
 
 // Mark: cell updates
