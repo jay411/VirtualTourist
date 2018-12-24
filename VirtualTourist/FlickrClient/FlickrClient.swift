@@ -70,6 +70,7 @@ class FlickrClient {
      func getImageUrlsFromPage(_ parameters: [String:AnyObject],_ pages: Int,_ completionHandlerForGetFromPage: @escaping (_ success: Bool,_ imageArray:[Data]?, _ error:Error?) -> Void) {
         var newParameteres = parameters
         newParameteres[FlickrParameterKeys.page] = Int(arc4random_uniform(UInt32(pages))) as AnyObject
+        print("random page",newParameteres[FlickrParameterKeys.page])
         let requestUrl = URLRequest(url: flickrURLFromParameters(newParameteres))
         Alamofire.request(requestUrl).responseJSON { (response) in
             switch response.result{

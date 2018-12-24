@@ -30,6 +30,12 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                     dataController.viewContext.delete(item)
                 }
             }
+            do {
+                try dataController.viewContext.save()
+            }
+            catch{
+                fatalError("could not delete data")
+            }
         }
         self.getImages(pinLatitude!, pinLongitude!)
         performUIUpdatesOnMain {

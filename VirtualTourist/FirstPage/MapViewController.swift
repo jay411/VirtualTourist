@@ -85,17 +85,17 @@ class MapViewController: UIViewController,MKMapViewDelegate {
 extension MapViewController {
 
 
-//    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//        if let pointAnnotation = view.annotation {
-//            print("view annotation selected")
-//            pinAnnotation.coordinate = pointAnnotation.coordinate
-//            self.findTappedPin(self.pinAnnotation)
-//            mapView.deselectAnnotation(pointAnnotation, animated: true)
-//            }
-//        print(self.tappedPin == nil)
-//        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
-//
-//    }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        if let pointAnnotation = view.annotation {
+            print("view annotation selected")
+            pinAnnotation.coordinate = pointAnnotation.coordinate
+            self.findTappedPin(self.pinAnnotation)
+            mapView.deselectAnnotation(pointAnnotation, animated: true)
+            }
+        print(self.tappedPin == nil)
+        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
+
+    }
 
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -116,26 +116,26 @@ extension MapViewController {
         UserDefaults.standard.synchronize()
     }
 
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        let reuseId = "pin"
-
-        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-
-        if pinView == nil {
-
-            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.pinTintColor = .blue
-            pinView!.canShowCallout = true
-            pinView!.frame.size.width = 22
-            pinView!.frame.size.height = 22
-            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        else {
-            pinView!.annotation = annotation
-        }
-
-        return pinView
-    }
+//    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+//        let reuseId = "pin"
+//
+//        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+//
+//        if pinView == nil {
+//
+//            pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+//            pinView!.pinTintColor = .blue
+//            pinView!.canShowCallout = true
+//            pinView!.frame.size.width = 22
+//            pinView!.frame.size.height = 22
+//            pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+//        }
+//        else {
+//            pinView!.annotation = annotation
+//        }
+//
+//        return pinView
+//    }
       func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if let pointAnnotation = view.annotation {
             print("view annotation selected")
