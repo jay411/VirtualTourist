@@ -37,7 +37,7 @@ class MapViewController: UIViewController,MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        let tap = UILongPressGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         tap.delegate = self as? UIGestureRecognizerDelegate
         mapView.addGestureRecognizer(tap)
         self.fetchPins()
@@ -72,7 +72,7 @@ class MapViewController: UIViewController,MKMapViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    @objc func handleTap(_ sender:UITapGestureRecognizer) {
+    @objc func handleTap(_ sender:UILongPressGestureRecognizer) {
         let tappedLocation = sender.location(in: self.mapView)
         let tappedLocationCoordinate = mapView.convert(tappedLocation, toCoordinateFrom: mapView)
         let tappedPointAnnotation = MKPointAnnotation()
@@ -120,12 +120,14 @@ extension MapViewController {
         let reuseId = "pin"
 
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-        pinView?.canShowCallout = true
 
         if pinView == nil {
+
             pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView!.pinTintColor = .red
+            pinView!.pinTintColor = .blue
             pinView!.canShowCallout = true
+            pinView!.frame.size.width = 22
+            pinView!.frame.size.height = 22
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         }
         else {

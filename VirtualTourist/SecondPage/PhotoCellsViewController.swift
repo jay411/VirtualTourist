@@ -39,19 +39,7 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
     }
 
     var fetchedResultsController:NSFetchedResultsController<PinPhotos>!
-//
-//    func fetchPhotos(_ selectedPin:Pin) {
-//        let fetchRequest:NSFetchRequest<PinPhotos> = PinPhotos.fetchRequest()
-//
-//        let sortDescriptor = NSSortDescriptor(key: "photos", ascending: false)
-//        fetchRequest.sortDescriptors = [sortDescriptor]
-//        let predicate = NSPredicate(format: "pin == %@", selectedPin)
-//        fetchRequest.predicate = predicate
-//        if let results = try? dataController.viewContext.fetch(fetchRequest) {
-//            print("photos",results)
-//        }
-//
-//    }
+
     fileprivate func setupFetchResultsController() {
         let fetchRequest:NSFetchRequest<PinPhotos> = PinPhotos.fetchRequest()
 
@@ -119,10 +107,15 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                             fatalError("Could not save")
                         }
                 }
+                performUIUpdatesOnMain {
+                    print("performing fetch")
+                    self.performFetch()
+                    self.photoCollectionView.reloadData()
+                }
             }
         }
-        self.performFetch()
-        self.photoCollectionView.reloadData()
+
+
     }
 
 
@@ -165,8 +158,8 @@ extension PhotoCellsViewController {
             print("photo data found")
             cell.cellImage?.image = UIImage(data:photoData)
         }
-        if let photoData = self.photoDataArray?[indexPath.row] {
-            cell.cellImage?.image = UIImage(data:photoData)
+        else {
+            cell.cellImage?.image = self.image
         }
         return cell
     }
