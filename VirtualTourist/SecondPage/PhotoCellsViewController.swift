@@ -79,7 +79,9 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
         photoCollectionView.dataSource = self
         if fetchedResultsController.fetchedObjects!.count == 0 {
             print("fetch results count (photos):",fetchedResultsController.fetchedObjects!.count)
-            self.getImages(pinLatitude!, pinLongitude!)
+            DispatchQueue.global(qos: .userInitiated).async {
+                self.getImages(self.pinLatitude!, self.pinLongitude!)
+            }
         }
     }
     
@@ -96,8 +98,11 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
 
     func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
         print("get images called")
-        self.newCollectionButton.isEnabled = false
-        self.newCollectionButton.titleLabel?.text = "Loading New Collection....."
+        performUIUpdatesOnMain {
+            self.newCollectionButton.isEnabled = false
+            self.newCollectionButton.setTitle("Loading New Collection.....", for: .normal)
+        }
+
         FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
             guard error == nil else {
                 self.displayAlert("Photos Error", "\(String(describing: error!.localizedDescription))")
@@ -121,7 +126,7 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
                     print("performing fetch")
                     self.performFetch()
                     self.photoCollectionView.reloadData()
-                    self.newCollectionButton.titleLabel?.text = "New Collection"
+                    self.newCollectionButton.setTitle("New Collection", for: .normal)
                     self.newCollectionButton.isEnabled = true
                 }
             }
@@ -147,6 +152,10 @@ extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
     }
 
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("Collection View methods objects",fetchedResultsController.sections?[0].numberOfObjects ?? 20)
+        if fetchedResultsController.sections?[0].numberOfObjects == 0 {
+            return 12
+        }
         return fetchedResultsController.sections?[0].numberOfObjects ?? 20
     }
 
@@ -155,13 +164,18 @@ extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
     }
 
      func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let aCell = fetchedResultsController.object(at: indexPath)
+         let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
+        if fetchedResultsController.fetchedObjects!.count != 0 {
+            let aCell = fetchedResultsController.object(at: indexPath)
+            
+            if let photoData = aCell.photos{
+                print("photo data found")
+                cell.cellImage?.image = UIImage(data:photoData)
 
-        let cell=collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath) as! PhotoCollectionViewCell
-        
-        if let photoData = aCell.photos{
-            print("photo data found")
-            cell.cellImage?.image = UIImage(data:photoData)
+            }
+            else {
+                cell.cellImage?.image = self.image
+            }
         }
         else {
             cell.cellImage?.image = self.image

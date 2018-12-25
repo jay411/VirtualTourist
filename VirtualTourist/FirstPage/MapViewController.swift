@@ -130,16 +130,16 @@ extension MapViewController {
         UserDefaults.standard.synchronize()
     }
 
-      func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if let pointAnnotation = view.annotation {
-            print("view annotation selected")
-            pinAnnotation.coordinate = pointAnnotation.coordinate
-            self.findTappedPin(self.pinAnnotation)
-            mapView.deselectAnnotation(pointAnnotation, animated: true)
-        }
-        print(self.tappedPin == nil)
-        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
-    }
+//      func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+//        if let pointAnnotation = view.annotation {
+//            print("view annotation selected")
+//            pinAnnotation.coordinate = pointAnnotation.coordinate
+//            self.findTappedPin(self.pinAnnotation)
+//            mapView.deselectAnnotation(pointAnnotation, animated: true)
+//        }
+//        print(self.tappedPin == nil)
+//        self.performSegue(withIdentifier: "segueToPinImages", sender: self)
+//    }
 }
 
 // Mark -- Pin  methods
