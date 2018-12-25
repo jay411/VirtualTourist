@@ -96,43 +96,6 @@ class PhotoCellsViewController: UIViewController,NSFetchedResultsControllerDeleg
         fetchedResultsController = nil
     }
 
-    func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
-        print("get images called")
-        performUIUpdatesOnMain {
-            self.newCollectionButton.isEnabled = false
-            self.newCollectionButton.setTitle("Loading New Collection.....", for: .normal)
-        }
-
-        FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
-            guard error == nil else {
-                self.displayAlert("Photos Error", "\(String(describing: error!.localizedDescription))")
-                return
-            }
-    
-            if let photosArray = photos {
-                self.photoDataArray = photosArray
-                for item in photosArray {
-                    let photo = PinPhotos(context: self.dataController.viewContext)
-                    photo.photos = item
-                    photo.pin = self.selectedPin
-                        do {
-                            try self.dataController.viewContext.save()
-                        }
-                        catch {
-                            self.displayAlert("Database Error", "Could not save")
-                        }
-                }
-                performUIUpdatesOnMain {
-                    print("performing fetch")
-                    self.performFetch()
-                    self.photoCollectionView.reloadData()
-                    self.newCollectionButton.setTitle("New Collection", for: .normal)
-                    self.newCollectionButton.isEnabled = true
-                }
-            }
-        }
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -194,7 +157,73 @@ extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
     }
 }
 
-// Mark: cell updates
+// Mark: network calls
 extension PhotoCellsViewController {
+    func getImages(_ pinLatitude:CLLocationDegrees,_ pinLongitude:CLLocationDegrees) {
+        print("get images called")
+        performUIUpdatesOnMain {
+            self.newCollectionButton.isEnabled = false
+            self.newCollectionButton.setTitle("Loading New Collection.....", for: .normal)
+        }
 
+        FlickrClient.sharedInstance().getImagesForPoint(pinLatitude, pinLongitude) { (success, photos, error) in
+            guard error == nil else {
+                self.displayAlert("Photos Error", "\(String(describing: error!.localizedDescription))")
+                return
+            }
+
+            if let photosArray = photos {
+                self.photoDataArray = photosArray
+                for item in photosArray {
+                    let photo = PinPhotos(context: self.dataController.viewContext)
+                    photo.photos = item
+                    photo.pin = self.selectedPin
+                    do {
+                        try self.dataController.viewContext.save()
+                    }
+                    catch {
+                        self.displayAlert("Database Error", "Could not save")
+                    }
+                }
+                performUIUpdatesOnMain {
+                    print("performing fetch")
+                    self.performFetch()
+                    self.photoCollectionView.reloadData()
+                    self.newCollectionButton.setTitle("New Collection", for: .normal)
+                    self.newCollectionButton.isEnabled = true
+                }
+            }
+        }
+    }
+}
+
+extension PhotoCellsViewController {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            photoCollectionView.insertItems(at: [newIndexPath!])
+            break
+        case .delete:
+            photoCollectionView.deleteItems(at: [newIndexPath!])
+            break
+        case .update:
+            photoCollectionView.reloadItems(at: [newIndexPath!])
+        case .move:
+            break
+        }
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+        let indexSet = IndexSet(integer: sectionIndex)
+        switch type {
+        case .insert: photoCollectionView.insertSections(indexSet)
+        case .delete: photoCollectionView.deleteSections(indexSet)
+        case .update, .move:
+            fatalError("Invalid change type in controller(_:didChange:atSectionIndex:for:). Only .insert or .delete should be possible.")
+        }
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        photoCollectionView.reloadData()
+    }
 }
