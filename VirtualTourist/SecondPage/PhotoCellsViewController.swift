@@ -154,6 +154,8 @@ extension PhotoCellsViewController:UICollectionViewDelegateFlowLayout {
         } catch  {
             self.displayAlert("Database Error", "Could not delete photo")
         }
+        self.performFetch()
+        photoCollectionView.reloadData()
     }
 }
 
@@ -197,33 +199,3 @@ extension PhotoCellsViewController {
     }
 }
 
-extension PhotoCellsViewController {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            photoCollectionView.insertItems(at: [newIndexPath!])
-            break
-        case .delete:
-            photoCollectionView.deleteItems(at: [newIndexPath!])
-            break
-        case .update:
-            photoCollectionView.reloadItems(at: [newIndexPath!])
-        case .move:
-            break
-        }
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        let indexSet = IndexSet(integer: sectionIndex)
-        switch type {
-        case .insert: photoCollectionView.insertSections(indexSet)
-        case .delete: photoCollectionView.deleteSections(indexSet)
-        case .update, .move:
-            fatalError("Invalid change type in controller(_:didChange:atSectionIndex:for:). Only .insert or .delete should be possible.")
-        }
-    }
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        photoCollectionView.reloadData()
-    }
-}
