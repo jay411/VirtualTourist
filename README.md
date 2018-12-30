@@ -1,4 +1,5 @@
 # VirtualTourist
+Requires Cocoapods version --1.6.x
 Udacity Data Persistence project
 Frameworks/Libraries used--
 Core Data
